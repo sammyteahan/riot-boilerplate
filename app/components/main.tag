@@ -10,6 +10,7 @@
   <script type="es6">
     var self = this;
     self.disabled = true;
+    self.mixin('peopleListObservable');
 
     self.edit = (e) => {
       self.disabled = (nameInput.value == '' || ageInput.value == '')
@@ -23,10 +24,47 @@
       self.nameInput.value = '';
       self.ageInput.value = '';
       self.disabled = true;
+
+      // Trigger observable action
+      self.trigger('setCountAction', self.countArray());
+    }
+
+    self.oldFarts = (age) => {
+      return age >= 60;
+    }
+
+    self.whipperSnappers = (age) => {
+      return age <= 20;
+    }
+
+    self.countArray = (e) => {
+      return [
+        {
+          title: "Old Farts",
+          count: opts.people
+              .map((person) => person.age)
+              .filter(self.oldFarts)
+              .length,
+              class: 'red'
+        },
+        {
+            title: "Whippersnappers",
+            count: opts.people
+                .map((person) => person.age)
+                .filter(self.whipperSnappers)
+                .length,
+                class: 'blue'
+        },
+        {
+            title: "Total",
+            count: opts.people.length
+        }
+      ]
     }
 
     this.on('mount', function() {
-      console.log('app component mounted');
+      self.trigger('setCountAction', self.countArray());
     });
+
   </script>
 </app>

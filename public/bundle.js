@@ -54,12 +54,21 @@
 
 	__webpack_require__(2);
 
+	__webpack_require__(4);
+
+	var _mixinsPeopleListObservable = __webpack_require__(3);
+
+	var _mixinsPeopleListObservable2 = _interopRequireDefault(_mixinsPeopleListObservable);
+
 	var params = {
-	  people: [{ name: 'Sam', age: 25 }, { name: 'Taylor', age: 22 }, { name: 'Mr. T', age: 55 }]
+	  people: [{ name: 'Sam', age: 25 }, { name: 'Taylor', age: 22 }, { name: 'Mr. T', age: 55 }, { name: 'Kevin', age: 122 }]
 	};
 
 	// Riot.mount('*');
+
+	_riot2['default'].mixin('peopleListObservable', new _mixinsPeopleListObservable2['default']());
 	_riot2['default'].mount('app', { people: params.people });
+	_riot2['default'].mount('people-count');
 
 /***/ },
 /* 1 */
@@ -1446,6 +1455,7 @@
 	riot.tag('app', '<h1>{opts.title}</h1> <input type="text" id="nameInput" placeholder="Name" onkeyup="{edit}"> <input type="text" id="ageInput" placeholder="Age" onkeyup="{edit}"> <button onclick="{add}">Add</button> <ul> <li each="{person in opts.people}">{person.name} - {person.age}</li> </ul>', function (opts) {
 	  var self = this;
 	  self.disabled = true;
+	  self.mixin('peopleListObservable');
 
 	  self.edit = function (e) {
 	    self.disabled = nameInput.value == '' || ageInput.value == '';
@@ -1459,10 +1469,114 @@
 	    self.nameInput.value = '';
 	    self.ageInput.value = '';
 	    self.disabled = true;
+
+	    // Trigger observable action
+	    self.trigger('setCountAction', self.countArray());
+	  };
+
+	  self.oldFarts = function (age) {
+	    return age >= 60;
+	  };
+
+	  self.whipperSnappers = function (age) {
+	    return age <= 20;
+	  };
+
+	  self.countArray = function (e) {
+	    return [{
+	      title: "Old Farts",
+	      count: opts.people.map(function (person) {
+	        return person.age;
+	      }).filter(self.oldFarts).length,
+	      'class': 'red'
+	    }, {
+	      title: "Whippersnappers",
+	      count: opts.people.map(function (person) {
+	        return person.age;
+	      }).filter(self.whipperSnappers).length,
+	      'class': 'blue'
+	    }, {
+	      title: "Total",
+	      count: opts.people.length
+	    }];
 	  };
 
 	  this.on('mount', function () {
-	    console.log('app component mounted');
+	    self.trigger('setCountAction', self.countArray());
+	  });
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _riot = __webpack_require__(1);
+
+	var _riot2 = _interopRequireDefault(_riot);
+
+	exports['default'] = function () {
+	  var _this = this;
+
+	  /**
+	  * Make this instance an observable
+	  */
+	  _riot2['default'].observable(this);
+
+	  /**
+	  * @desc function responsible for any logic required,
+	  * and passing data to our observers
+	  *
+	  * @params countArray {array} - countArray from main.tag
+	  */
+	  var setCountStore = function setCountStore(countArray) {
+	    _this.trigger('setCountStore', countArray);
+	  };
+
+	  /**
+	  * @desc mixins extend functionality of a component.
+	  * so it's helpful to throw a debugger in the onmount
+	  * life cycle call and see this function is available
+	  * to an extended component (`let` prduces a private 
+	  * function only known to this local scope)
+	  */
+	  this.testFunction = function (e) {
+	    console.log('doing it real big');
+	  };
+
+	  /**
+	  * @desc on setCountAction, call _setCountStore.
+	  * our countArray object in the main.tag is 
+	  * implicitly passed as a parameter in the
+	  * setCountStore function.
+	  */
+	  this.on('setCountAction', setCountStore);
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(riot) {'use strict';
+
+	riot.tag('people-count', '<div each="{countArray}"> <strong>{{title}}</strong> <span class="{class}">{{count}}</span> </div>', function (opts) {
+	  var self = this;
+	  self.mixin('peopleListObservable');
+
+	  self.on('setCountStore', function (count) {
+	    console.log(count);
+	    self.countArray = count;
+	    self.update();
 	  });
 	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
