@@ -54,7 +54,12 @@
 
 	__webpack_require__(2);
 
-	_riot2['default'].mount('*');
+	var params = {
+	  people: [{ name: 'Sam', age: 25 }, { name: 'Taylor', age: 22 }, { name: 'Mr. T', age: 55 }]
+	};
+
+	// Riot.mount('*');
+	_riot2['default'].mount('app', { people: params.people });
 
 /***/ },
 /* 1 */
@@ -1438,10 +1443,26 @@
 
 	/* WEBPACK VAR INJECTION */(function(riot) {'use strict';
 
-	riot.tag('app', '<h1>{opts.title}</h1>', function (opts) {
+	riot.tag('app', '<h1>{opts.title}</h1> <input type="text" id="nameInput" placeholder="Name" onkeyup="{edit}"> <input type="text" id="ageInput" placeholder="Age" onkeyup="{edit}"> <button onclick="{add}">Add</button> <ul> <li each="{person in opts.people}">{person.name} - {person.age}</li> </ul>', function (opts) {
 	  var self = this;
+	  self.disabled = true;
+
+	  self.edit = function (e) {
+	    self.disabled = nameInput.value == '' || ageInput.value == '';
+	  };
+
+	  self.add = function (e) {
+	    opts.people.push({
+	      name: nameInput.value,
+	      age: ageInput.value
+	    });
+	    self.nameInput.value = '';
+	    self.ageInput.value = '';
+	    self.disabled = true;
+	  };
+
 	  this.on('mount', function () {
-	    console.log('component mounted');
+	    console.log('app component mounted');
 	  });
 	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
