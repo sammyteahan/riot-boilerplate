@@ -54,9 +54,9 @@
 
 	__webpack_require__(2);
 
-	__webpack_require__(4);
+	__webpack_require__(3);
 
-	var _mixinsPeopleListObservable = __webpack_require__(3);
+	var _mixinsPeopleListObservable = __webpack_require__(4);
 
 	var _mixinsPeopleListObservable2 = _interopRequireDefault(_mixinsPeopleListObservable);
 
@@ -64,10 +64,11 @@
 	  people: [{ name: 'Sam', age: 25 }, { name: 'Taylor', age: 22 }, { name: 'Mr. T', age: 55 }, { name: 'Kevin', age: 122 }]
 	};
 
-	// Riot.mount('*');
+	// riot.mount('*');
 
 	_riot2['default'].mixin('peopleListObservable', new _mixinsPeopleListObservable2['default']());
-	_riot2['default'].mount('app', { people: params.people });
+	// riot.mount('app', {people: params.people});
+	_riot2['default'].mount('app');
 	_riot2['default'].mount('people-count');
 
 /***/ },
@@ -1452,9 +1453,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(riot) {'use strict';
 
-	riot.tag('app', '<h1>{opts.title}</h1> <input type="text" id="nameInput" placeholder="Name" onkeyup="{edit}"> <input type="text" id="ageInput" placeholder="Age" onkeyup="{edit}"> <button onclick="{add}">Add</button> <ul> <li each="{person in opts.people}">{person.name} - {person.age}</li> </ul>', function (opts) {
+	riot.tag('app', '<h1>{opts.title}</h1> <input type="text" id="nameInput" placeholder="Name" onkeyup="{edit}"> <input type="text" id="ageInput" placeholder="Age" onkeyup="{edit}"> <button onclick="{add}">Add</button>  <ul> <li each="{people}">{name} - {age}</li> </ul>', function (opts) {
 	  var self = this;
 	  self.disabled = true;
+	  self.people = [];
+
 	  self.mixin('peopleListObservable');
 
 	  self.edit = function (e) {
@@ -1462,7 +1465,11 @@
 	  };
 
 	  self.add = function (e) {
-	    opts.people.push({
+	    // opts.people.push({
+	    //   name: nameInput.value,
+	    //   age: ageInput.value
+	    // });
+	    self.people.push({
 	      name: nameInput.value,
 	      age: ageInput.value
 	    });
@@ -1485,30 +1492,47 @@
 	  self.countArray = function (e) {
 	    return [{
 	      title: "Old Farts",
-	      count: opts.people.map(function (person) {
+	      count: self.people.map(function (person) {
 	        return person.age;
 	      }).filter(self.oldFarts).length,
 	      'class': 'red'
 	    }, {
 	      title: "Whippersnappers",
-	      count: opts.people.map(function (person) {
+	      count: self.people.map(function (person) {
 	        return person.age;
 	      }).filter(self.whipperSnappers).length,
 	      'class': 'blue'
 	    }, {
 	      title: "Total",
-	      count: opts.people.length
+	      count: self.people.length
 	    }];
 	  };
 
 	  this.on('mount', function () {
-	    self.trigger('setCountAction', self.countArray());
+	    // self.trigger('setCountAction', self.countArray());
 	  });
 	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
 /* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(riot) {'use strict';
+
+	riot.tag('people-count', '<div each="{countArray}"> <strong>{title}</strong> <span class="{class}">{count}</span> </div>', function (opts) {
+	  var self = this;
+
+	  self.mixin('peopleListObservable');
+
+	  self.on('setCountStore', function (count) {
+	    self.update({ countArray: count });
+	  });
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1562,24 +1586,6 @@
 	};
 
 	module.exports = exports['default'];
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(riot) {'use strict';
-
-	riot.tag('people-count', '<div each="{countArray}"> <strong>{{title}}</strong> <span class="{class}">{{count}}</span> </div>', function (opts) {
-	  var self = this;
-	  self.mixin('peopleListObservable');
-
-	  self.on('setCountStore', function (count) {
-	    console.log(count);
-	    self.countArray = count;
-	    self.update();
-	  });
-	});
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }
 /******/ ]);

@@ -1,5 +1,6 @@
 import Riot from 'riot';
 
+
 export default function() {
 
   /**

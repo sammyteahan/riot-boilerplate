@@ -1,4 +1,4 @@
-import Riot from 'riot';
+import riot from 'riot';
 import './components/main.tag';
 import './components/people-count.tag';
 import PeopleListObservable from './mixins/peopleListObservable';
@@ -12,8 +12,9 @@ var params = {
   ]
 };
 
-// Riot.mount('*');
+// riot.mount('*');
 
-Riot.mixin('peopleListObservable', new PeopleListObservable());
-Riot.mount('app', {people: params.people});
-Riot.mount('people-count')
+riot.mixin('peopleListObservable', new PeopleListObservable());
+// riot.mount('app', {people: params.people});
+riot.mount('app');
+riot.mount('people-count')
