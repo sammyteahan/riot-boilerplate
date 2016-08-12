@@ -56,19 +56,13 @@
 
 	__webpack_require__(4);
 
-	var _mixinsPeopleListObservable = __webpack_require__(5);
-
-	var _mixinsPeopleListObservable2 = _interopRequireDefault(_mixinsPeopleListObservable);
-
-	var _mixinsStore = __webpack_require__(6);
+	var _mixinsStore = __webpack_require__(5);
 
 	var params = {
 	  people: [{ name: 'Sam', age: 25 }, { name: 'Taylor', age: 22 }, { name: 'Mr. T', age: 55 }, { name: 'Kevin', age: 122 }]
 	};
 
 	// Riot.mount('*');
-
-	_riot2['default'].mixin('peopleListObservable', new _mixinsPeopleListObservable2['default']());
 	_riot2['default'].mixin('store', _mixinsStore.store);
 	_riot2['default'].mount('app', { people: params.people });
 	_riot2['default'].mount('people-count');
@@ -2756,7 +2750,7 @@
 	    self.ageInput.value = '';
 	    self.disabled = true;
 
-	    self.observable.trigger('setCountAction', self.countArray());
+	    self.setCountAction(self.countArray());
 	  };
 
 	  self.oldFarts = function (age) {
@@ -2769,25 +2763,25 @@
 
 	  self.countArray = function (e) {
 	    return [{
-	      title: "Old Farts",
+	      title: 'Old Farts',
+	      'class': 'red',
 	      count: opts.people.map(function (person) {
 	        return person.age;
-	      }).filter(self.oldFarts).length,
-	      'class': 'red'
+	      }).filter(self.oldFarts).length
 	    }, {
 	      title: "Whippersnappers",
+	      'class': 'blue',
 	      count: opts.people.map(function (person) {
 	        return person.age;
-	      }).filter(self.whipperSnappers).length,
-	      'class': 'blue'
+	      }).filter(self.whipperSnappers).length
 	    }, {
 	      title: "Total",
 	      count: opts.people.length
 	    }];
 	  };
 
-	  this.on('mount', function () {
-	    self.observable.trigger('setCountAction', self.countArray());
+	  this.on('updated', function () {
+	    self.setCountAction(self.countArray());
 	  });
 	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
@@ -2798,76 +2792,20 @@
 
 	/* WEBPACK VAR INJECTION */(function(riot) {'use strict';
 
-	riot.tag2('people-count', '<div each="{countArray}"> <strong>{{ title }}</strong> <span class="{class}">{{ count }}</span> </div>', '', '', function (opts) {
-	  var self = this;
-	  self.mixin('store');
+	riot.tag2('people-count', '<div each="{countArray}"> <strong>{title}</strong> <span class="{class}">{count}</span> </div>', '', '', function (opts) {
+	    var self = this;
+	    self.mixin('store');
 
-	  self.observable.on('countAdded', function (count) {
-	    console.log(count);
-	    self.countArray = count;
-	    self.update();
-	  });
+	    self.observable.on('countAdded', function (countArray) {
+	        console.log('count added');
+	        self.countArray = countArray;
+	        self.update();
+	    });
 	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _riot = __webpack_require__(1);
-
-	var _riot2 = _interopRequireDefault(_riot);
-
-	exports['default'] = function () {
-	  var _this = this;
-
-	  /**
-	  * Make this instance an observable
-	  */
-	  _riot2['default'].observable(this);
-
-	  /**
-	  * @desc function responsible for any logic required,
-	  * and passing data to our observers
-	  *
-	  * @params countArray {array} - countArray from main.tag
-	  */
-	  var setCountStore = function setCountStore(countArray) {
-	    _this.trigger('setCountStore', countArray);
-	  };
-
-	  /**
-	  * @desc mixins extend functionality of a component.
-	  * so it's helpful to throw a debugger in the onmount
-	  * life cycle call and see this function is available
-	  * to an extended component (`let` prduces a private 
-	  * function only known to this local scope)
-	  */
-	  this.testFunction = function (e) {
-	    console.log('doing it real big');
-	  };
-
-	  /**
-	  * @desc on setCountAction, call _setCountStore.
-	  * our countArray object in the main.tag is 
-	  * implicitly passed as a parameter in the
-	  * setCountStore function.
-	  */
-	  this.on('setCountAction', setCountStore);
-	};
-
-	module.exports = exports['default'];
-
-/***/ },
-/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2891,20 +2829,13 @@
 	  * @params countArray {array} - countArray from main.tag
 	  */
 	  setCountStore: function setCountStore(countArray) {
-	    this.store.trigger('setCountStore', countArray);
+	    this.observable.trigger('setCountStore', countArray);
 	  },
 
 	  setCountAction: function setCountAction(countArray) {
-	    this.store.trigger('countAdded', countArray);
+	    this.observable.trigger('countAdded', countArray);
 	  },
 
-	  /**
-	  * @desc mixins extend functionality of a component.
-	  * so it's helpful to throw a debugger in the onmount
-	  * life cycle call and see this function is available
-	  * to an extended component (`let` prduces a private 
-	  * function only known to this local scope)
-	  */
 	  testFunction: function testFunction(e) {
 	    console.log('doing it real big');
 	  },
@@ -2914,14 +2845,6 @@
 
 	exports.store = store;
 	exports['default'] = store;
-
-	/**
-	* @desc on setCountAction, call _setCountStore.
-	* our countArray object in the main.tag is 
-	* implicitly passed as a parameter in the
-	* setCountStore function.
-	*/
-	// this.on('setCountAction', setCountStore);
 
 /***/ }
 /******/ ]);

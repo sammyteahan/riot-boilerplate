@@ -10,20 +10,13 @@ export const store = {
   * @params countArray {array} - countArray from main.tag
   */
   setCountStore(countArray) {
-    this.store.trigger('setCountStore', countArray);
+    this.observable.trigger('setCountStore', countArray);
   },
 
   setCountAction(countArray) {
-    this.store.trigger('countAdded', countArray);
+    this.observable.trigger('countAdded', countArray);
   },
 
-  /**
-  * @desc mixins extend functionality of a component.
-  * so it's helpful to throw a debugger in the onmount
-  * life cycle call and see this function is available
-  * to an extended component (`let` prduces a private 
-  * function only known to this local scope)
-  */
   testFunction(e) {
     console.log('doing it real big');
   },
@@ -32,12 +25,3 @@ export const store = {
 };
 
 export default store;
-
-/**
-* @desc on setCountAction, call _setCountStore.
-* our countArray object in the main.tag is 
-* implicitly passed as a parameter in the
-* setCountStore function.
-*/
-// this.on('setCountAction', setCountStore);
-
