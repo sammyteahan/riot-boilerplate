@@ -54,9 +54,9 @@
 
 	__webpack_require__(2);
 
-	__webpack_require__(4);
+	__webpack_require__(3);
 
-	var _mixinsPeopleListObservable = __webpack_require__(3);
+	var _mixinsPeopleListObservable = __webpack_require__(4);
 
 	var _mixinsPeopleListObservable2 = _interopRequireDefault(_mixinsPeopleListObservable);
 
@@ -1511,6 +1511,24 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(riot) {'use strict';
+
+	riot.tag('people-count', '<div each="{countArray}"> <strong>{{title}}</strong> <span class="{class}">{{count}}</span> </div>', function (opts) {
+	  var self = this;
+	  self.mixin('peopleListObservable');
+
+	  self.on('setCountStore', function (count) {
+	    console.log(count);
+	    self.countArray = count;
+	    self.update();
+	  });
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
@@ -1562,24 +1580,6 @@
 	};
 
 	module.exports = exports['default'];
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(riot) {'use strict';
-
-	riot.tag('people-count', '<div each="{countArray}"> <strong>{{title}}</strong> <span class="{class}">{{count}}</span> </div>', function (opts) {
-	  var self = this;
-	  self.mixin('peopleListObservable');
-
-	  self.on('setCountStore', function (count) {
-	    console.log(count);
-	    self.countArray = count;
-	    self.update();
-	  });
-	});
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }
 /******/ ]);

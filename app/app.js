@@ -5,9 +5,7 @@ import PeopleListObservable from './mixins/peopleListObservable';
 
 var params = {
   people: [
-    {name: 'Sam', age: 25},
-    {name: 'Taylor', age: 22},
-    {name: 'Mr. T', age: 55},
+    {name: 'Sam', age: 26},
     {name: 'Kevin', age: 122}
   ]
 };
