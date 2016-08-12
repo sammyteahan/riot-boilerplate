@@ -10,7 +10,7 @@
   <script type="es6">
     var self = this;
     self.disabled = true;
-    self.mixin('peopleListObservable');
+    self.mixin('store');
 
     self.edit = (e) => {
       self.disabled = (nameInput.value == '' || ageInput.value == '')
@@ -26,7 +26,7 @@
       self.disabled = true;
 
       // Trigger observable action
-      self.trigger('setCountAction', self.countArray());
+      self.observable.trigger('setCountAction', self.countArray());
     }
 
     self.oldFarts = (age) => {
@@ -63,7 +63,7 @@
     }
 
     this.on('mount', function() {
-      self.trigger('setCountAction', self.countArray());
+      self.observable.trigger('setCountAction', self.countArray());
     });
 
   </script>

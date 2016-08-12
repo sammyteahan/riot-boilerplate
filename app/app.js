@@ -2,6 +2,7 @@ import Riot from 'riot';
 import './components/main.tag';
 import './components/people-count.tag';
 import PeopleListObservable from './mixins/peopleListObservable';
+import { store } from './mixins/store';
 
 var params = {
   people: [
@@ -15,5 +16,6 @@ var params = {
 // Riot.mount('*');
 
 Riot.mixin('peopleListObservable', new PeopleListObservable());
+Riot.mixin('store', store);
 Riot.mount('app', {people: params.people});
 Riot.mount('people-count')
