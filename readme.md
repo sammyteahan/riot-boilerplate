@@ -1,5 +1,7 @@
 ## Riot
 
+[![forthebadge](http://forthebadge.com/images/badges/approved-by-george-costanza.svg)](http://forthebadge.com)
+
 ![Rocky III](rockyIII.jpg)
 
 RiotJS is the Italian Stallion of Javascript frameworks. A definite underdog, but has every ability to compete with the big frameworks in the ring. It just keeps impressing me with it's flexibility and power, while staying out of my way. I'm a big fan of React, but Riot has its place as well.  Here's my RiotJS, Webpack, ES6 setup.
